@@ -1,0 +1,25 @@
+<RCC>
+    <qresource prefix="/rom">
+        <file alias="chars">rom/chars.bin</file>
+        <file alias="kernal">rom/kernal.bin</file>
+        <file alias="basic">rom/basic.bin</file>
+    </qresource>
+    <qresource prefix="/images">
+        <file alias="logo">images/cbmlogo.png</file>
+        <file alias="disk">images/disk.png</file>
+    </qresource>
+    <qresource prefix="/test">
+        <file alias="aa">test/aa.prg</file>
+        <file alias="display">test/display.prg</file>
+        <file alias="display2">test/display2.prg</file>
+        <file alias="ecm">test/ecm.prg</file>
+        <file alias="multicolor">test/multicolor.prg</file>
+        <file alias="displaymcm">test/displaymcm.prg</file>
+        <file alias="rasterinterrupt">test/rasterinterrupt.prg</file>
+        <file alias="rasterinterrupt2">test/rasterinterrupt2.prg</file>
+        <file alias="misuraclock">test/misuraclock.prg</file>
+        <file alias="font">test/font.prg</file>
+        <file alias="sprite">test/sprite.prg</file>
+        <file alias="chopperflight">test/chopperflight.prg</file>
+    </qresource>
+</RCC>

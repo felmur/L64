@@ -1,0 +1,627 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1140</width>
+    <height>800</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>MainWindow</string>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <layout class="QGridLayout" name="gridLayout">
+    <item row="0" column="0">
+     <layout class="QVBoxLayout" name="vlayout"/>
+    </item>
+    <item row="1" column="0">
+     <layout class="QGridLayout" name="gridLayout_2">
+      <item row="1" column="9">
+       <widget class="QPushButton" name="pushButton_9">
+        <property name="text">
+         <string>Sprite</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="8">
+       <widget class="QPushButton" name="pushButton_7">
+        <property name="text">
+         <string>Font</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="1">
+       <widget class="QPushButton" name="testbt">
+        <property name="text">
+         <string>ECM</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="4">
+       <widget class="QPushButton" name="pushButton_4">
+        <property name="text">
+         <string>MCM</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="6">
+       <widget class="QPushButton" name="pushButton_6">
+        <property name="text">
+         <string>RasterINT</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="3">
+       <widget class="QPushButton" name="pushButton_3">
+        <property name="text">
+         <string>BMM2</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="11">
+       <widget class="QPushButton" name="pushButton_11">
+        <property name="text">
+         <string>misuraclock</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="7">
+       <widget class="QPushButton" name="pushButton_8">
+        <property name="text">
+         <string>RasterINT2</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="0">
+       <widget class="QPushButton" name="pushButton">
+        <property name="text">
+         <string>Test</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="2">
+       <widget class="QPushButton" name="pushButton_2">
+        <property name="text">
+         <string>BMM</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="5">
+       <widget class="QPushButton" name="pushButton_5">
+        <property name="text">
+         <string>BMM+MCM</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="10">
+       <widget class="QPushButton" name="pushButton_10">
+        <property name="text">
+         <string>chopper</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="0" colspan="12">
+       <layout class="QHBoxLayout" name="horizontalLayout">
+        <item>
+         <widget class="QLabel" name="label">
+          <property name="text">
+           <string>Disk Status:</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLabel" name="lbdiskstatus">
+          <property name="text">
+           <string>Off</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLabel" name="label_2">
+          <property name="text">
+           <string/>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLabel" name="label_3">
+          <property name="text">
+           <string>bmm,ecm,mcm: </string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLabel" name="graphics">
+          <property name="text">
+           <string>0,0,0</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLabel" name="label_4">
+          <property name="text">
+           <string>VicBank:</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLabel" name="vicbank">
+          <property name="text">
+           <string>0</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLabel" name="label_5">
+          <property name="text">
+           <string>Chars address:</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLabel" name="charbase">
+          <property name="text">
+           <string>0</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLabel" name="label_7">
+          <property name="text">
+           <string>reg $01:</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLabel" name="reg01">
+          <property name="text">
+           <string>0</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <spacer name="horizontalSpacer">
+          <property name="orientation">
+           <enum>Qt::Orientation::Horizontal</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>40</width>
+            <height>20</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+       </layout>
+      </item>
+     </layout>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QMenuBar" name="menubar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>1140</width>
+     <height>21</height>
+    </rect>
+   </property>
+   <widget class="QMenu" name="menuFile">
+    <property name="title">
+     <string>File</string>
+    </property>
+    <addaction name="actionExit"/>
+   </widget>
+   <widget class="QMenu" name="menuC64">
+    <property name="title">
+     <string>C64</string>
+    </property>
+    <addaction name="actionReset"/>
+    <addaction name="actionHardware_Reset"/>
+    <addaction name="actionJoystick"/>
+   </widget>
+   <widget class="QMenu" name="menuDisk">
+    <property name="title">
+     <string>Disk</string>
+    </property>
+    <addaction name="actionAttach"/>
+    <addaction name="actionGet_Directory"/>
+   </widget>
+   <widget class="QMenu" name="menuPrograms">
+    <property name="title">
+     <string>Programs</string>
+    </property>
+    <addaction name="actionLoad_Run_C64_PRG"/>
+   </widget>
+   <addaction name="menuFile"/>
+   <addaction name="menuC64"/>
+   <addaction name="menuDisk"/>
+   <addaction name="menuPrograms"/>
+  </widget>
+  <widget class="QStatusBar" name="statusbar"/>
+  <action name="actionExit">
+   <property name="icon">
+    <iconset theme="QIcon::ThemeIcon::SystemShutdown"/>
+   </property>
+   <property name="text">
+    <string>Exit</string>
+   </property>
+  </action>
+  <action name="actionReset">
+   <property name="text">
+    <string>Reset</string>
+   </property>
+  </action>
+  <action name="actionAttach">
+   <property name="text">
+    <string>Attach  disk image</string>
+   </property>
+  </action>
+  <action name="actionLoad_Run_C64_PRG">
+   <property name="text">
+    <string>Load&amp;Run C64 PRG</string>
+   </property>
+  </action>
+  <action name="actionHardware_Reset">
+   <property name="text">
+    <string>Hardware Reset</string>
+   </property>
+  </action>
+  <action name="actionGet_Directory">
+   <property name="text">
+    <string>Get Directory</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Shift+D</string>
+   </property>
+  </action>
+  <action name="actionJoystick">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset theme="QIcon::ThemeIcon::InputGaming"/>
+   </property>
+   <property name="text">
+    <string>Joystick</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Shift+J</string>
+   </property>
+  </action>
+ </widget>
+ <resources/>
+ <connections>
+  <connection>
+   <sender>testbt</sender>
+   <signal>released()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>ecmclick()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>190</x>
+     <y>767</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>157</x>
+     <y>539</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButton</sender>
+   <signal>released()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>testclick()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>57</x>
+     <y>767</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>53</x>
+     <y>548</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButton_2</sender>
+   <signal>released()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>bmmclick()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>284</x>
+     <y>767</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>243</x>
+     <y>547</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButton_3</sender>
+   <signal>released()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>bmm2click()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>378</x>
+     <y>767</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>307</x>
+     <y>556</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actionExit</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>exit()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>514</x>
+     <y>339</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actionReset</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>reset()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>514</x>
+     <y>339</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButton_4</sender>
+   <signal>released()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>mcmclick()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>471</x>
+     <y>767</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>395</x>
+     <y>568</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButton_5</sender>
+   <signal>released()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>bmmmcmclick()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>565</x>
+     <y>767</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>478</x>
+     <y>570</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButton_6</sender>
+   <signal>released()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>rasterintclick()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>659</x>
+     <y>767</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>573</x>
+     <y>555</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButton_7</sender>
+   <signal>released()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>fontclick()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>847</x>
+     <y>767</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>660</x>
+     <y>579</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButton_8</sender>
+   <signal>released()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>rasterint2click()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>753</x>
+     <y>767</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>852</x>
+     <y>589</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButton_9</sender>
+   <signal>released()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>spriteclick()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>940</x>
+     <y>767</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>983</x>
+     <y>574</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButton_10</sender>
+   <signal>released()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>chopperclick()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>1034</x>
+     <y>767</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>972</x>
+     <y>589</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actionAttach</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>attach()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>530</x>
+     <y>354</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actionLoad_Run_C64_PRG</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>loadrun()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>530</x>
+     <y>354</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButton_11</sender>
+   <signal>released()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>misuraclockclick()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>1129</x>
+     <y>767</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>1023</x>
+     <y>613</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actionHardware_Reset</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>hardreset()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>569</x>
+     <y>399</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actionGet_Directory</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>getdirectory()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>569</x>
+     <y>399</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actionJoystick</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>joystick()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>569</x>
+     <y>399</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+ <slots>
+  <slot>testclick()</slot>
+  <slot>ecmclick()</slot>
+  <slot>bmmclick()</slot>
+  <slot>bmm2click()</slot>
+  <slot>exit()</slot>
+  <slot>reset()</slot>
+  <slot>mcmclick()</slot>
+  <slot>bmmmcmclick()</slot>
+  <slot>rasterintclick()</slot>
+  <slot>fontclick()</slot>
+  <slot>rasterint2click()</slot>
+  <slot>spriteclick()</slot>
+  <slot>chopperclick()</slot>
+  <slot>dirclick()</slot>
+  <slot>attach()</slot>
+  <slot>loadrun()</slot>
+  <slot>misuraclockclick()</slot>
+  <slot>hardreset()</slot>
+  <slot>getdirectory()</slot>
+  <slot>joystick()</slot>
+ </slots>
+</ui>

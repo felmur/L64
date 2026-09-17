@@ -50,6 +50,7 @@ QString lastdisk;
 
 extern QApplication *app;
 extern bool joystick_emulation_enabled;
+bool emulate_printer=false;
 
 QString prgname = "L64";
 QString version = "1.0a";
@@ -66,6 +67,8 @@ MainWindow::MainWindow(QWidget *parent)
 
     ui->actionJoystick->setChecked(true);
     joystick_emulation_enabled = true;
+    ui->actionPrinter->setChecked(true);
+    emulate_printer=true;
 
     QFile c(QDir::homePath()+"/.l64.cfg");
     if (c.open(QFile::ReadOnly)){
@@ -383,8 +386,12 @@ void MainWindow::getdirectory()
 
 void MainWindow::joystick()
 {
-    if (ui->actionJoystick->isChecked()) joystick_emulation_enabled = true;
-    else joystick_emulation_enabled = false;
+    joystick_emulation_enabled = ui->actionJoystick->isChecked();
+}
+
+void MainWindow::printer()
+{
+    emulate_printer = ui->actionPrinter->isChecked();
 }
 
 void MainWindow::onFocusChanged()

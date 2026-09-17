@@ -83,12 +83,12 @@ void timebase::run() {
 
         // OPEN, tipo OPEN 15,8,15,"S0:pippo"
         case 0xF3D5:
-            if (device != 8 && device != 1){
+            if (device != 8 && device != 1 && device !=4){
                 cpu->SetX(0x05);
                 cpu->SetPC(0xA43A);
                 continue;
             }
-            if (device == 8) {
+            if (device == 8 || device == 4) {
                 //cout << "trappola open" << endl;
                 drive->handle_trap_open();
             }

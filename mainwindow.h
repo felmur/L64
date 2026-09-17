@@ -45,6 +45,7 @@ public slots:
     void hardreset();
     void getdirectory();
     void joystick();
+    void printer();
 
     void onFocusChanged();
     void timeout();

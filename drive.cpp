@@ -18,6 +18,7 @@ extern CPU *cpu;
 #include "d64image.h"
 extern D64Image *d64;
 extern DriveStatusChannel drive15;
+extern bool emulate_printer;
 
 // Array di stato globale per i canali attivi
 OpenFileChannel open_channels[10];
@@ -183,13 +184,91 @@ void Drive::handle_trap_save() {
 }
 
 void Drive::handle_trap_open() {
+    cout << "[Drive] handle trap open starting..." << endl;
     uint8_t device   = cpu->MemoryRead(0x00BA);
-    if (device != 8) return; // Gestiamo solo il drive 8
+    // if (device == 4 && !emulate_printer){
+    //     return;
+    // }
+    // =========================================================================
+    // CASO MULTI-STATO: SIMULAZIONE STAMPANTE (DEVICE 4) ACCESA O SPENTA
+    // =========================================================================
+    if (device == 4) {
+        uint8_t sec_addr = cpu->MemoryRead(0x00B9);
+        uint8_t lfn      = cpu->MemoryRead(0x00B8);
+
+        // Prepariamo l'estrazione manuale dello stack comune a entrambi i rami
+        uint8_t sp = cpu->GetS();
+        uint8_t ret_lo = cpu->MemoryRead(0x0100 + (uint8_t)(sp + 1));
+        uint8_t ret_hi = cpu->MemoryRead(0x0100 + (uint8_t)(sp + 2));
+        cpu->SetS(sp + 2); // Simula i due PLA della RTS
+        uint16_t target_pc = (ret_lo | (ret_hi << 8)) + 1;
+
+        if (emulate_printer) {
+            // --- RAMO A: STAMPANTE ACCESA ---
+            // Registriamo il successo nelle tabelle del Kernal
+            uint8_t num_files = cpu->MemoryRead(0x0098);
+            if (num_files < 10) {
+                cpu->MemoryWrite(0x0259 + num_files, lfn);
+                cpu->MemoryWrite(0x0262 + num_files, 4);
+                cpu->MemoryWrite(0x026B + num_files, sec_addr);
+                num_files++;
+                cpu->MemoryWrite(0x0098, num_files);
+            }
+            cpu->MemoryWrite(0x00BA, 4);
+            cpu->MemoryWrite(0x0090, 0x00); // ST = 0 (Tutto OK, stampante pronta)
+
+            cpu->SetA(0);
+            cpu->SetP(cpu->GetP() & ~0x01); // Pulisce il Carry Flag (Successo)
+        }
+        else {
+            // --- RAMO B: STAMPANTE SPENTA ---
+            // CRUCIALE: Scriviamo 128 (Bit 7) nello Status Byte $90 per simulare il "Device Not Present"!
+            cpu->MemoryWrite(0x0090, 128);
+
+            // Il Kernal si aspetta l'accumulatore a 5 (I/O Error) in caso di fallimento della OPEN seriale
+            cpu->SetA(5);
+            cpu->SetP(cpu->GetP() | 0x01); // Imposta il Carry Flag a 1 (Segnala errore al BASIC)
+        }
+
+        cpu->SetPC(target_pc); // Salto di rientro immediato senza freeze hardware
+        return;
+    }
+
+    if (device != 8 && device != 4) return;
 
     uint8_t sec_addr = cpu->MemoryRead(0x00B9);
     uint8_t lfn      = cpu->MemoryRead(0x00B8);
     uint8_t len      = cpu->MemoryRead(0x00B7);
     uint16_t name_ptr = cpu->MemoryRead(0x00BB) | (cpu->MemoryRead(0x00BC) << 8);
+
+    // =========================================================================
+    // CASO NUOVO: SIMULAZIONE HLE STAMPANTE (DEVICE 4)
+    // =========================================================================
+    if (device == 4) {
+        // Aggiorniamo manualmente le tabelle del Kernal in RAM per registrare il file aperto
+        uint8_t num_files = cpu->MemoryRead(0x0098);
+        if (num_files < 10) {
+            cpu->MemoryWrite(0x0259 + num_files, lfn);            // Tabella LFN
+            cpu->MemoryWrite(0x0262 + num_files, 4);              // Tabella Device = 4!
+            cpu->MemoryWrite(0x026B + num_files, sec_addr);       // Tabella Second Address
+            num_files++;
+            cpu->MemoryWrite(0x0098, num_files);
+        }
+        cpu->MemoryWrite(0x00BA, 4); // Ultimo device usato
+        cpu->MemoryWrite(0x0090, 0x00); // Status Byte a 0 (Nessun errore!)
+
+        // RTS manuale di successo per tornare subito al BASIC
+        uint8_t sp = cpu->GetS();
+        uint8_t ret_lo = cpu->MemoryRead(0x0100 + (uint8_t)(sp + 1));
+        uint8_t ret_hi = cpu->MemoryRead(0x0100 + (uint8_t)(sp + 2));
+        cpu->SetS(sp + 2);
+        uint16_t target_pc = (ret_lo | (ret_hi << 8)) + 1;
+
+        cpu->SetA(0);
+        cpu->SetP(cpu->GetP() & ~0x01); // Carry a 0 = DISPOSITIVO PRESENTE!
+        cpu->SetPC(target_pc);
+        return;
+    }
 
     string full_cmd = "";
     for (int i = 0; i < len; i++) {
@@ -217,6 +296,7 @@ void Drive::handle_trap_open() {
         if (drive15.error_buffer.length() >= 2 && isdigit(drive15.error_buffer[0])) {
             error_code = (drive15.error_buffer[0] - '0') * 10 + (drive15.error_buffer[1] - '0');
         }
+        drive15.set_status(0, "OK", 0, 0);
         cout << "[Drive] handle_trap_open success(1)" << endl;
         simulate_rts_success();
         return;
@@ -560,9 +640,60 @@ void Drive::process_drive_command(string cmd) {
         break;
     }
 
+    case 'M': {
+        if (cmd.length() >= 3 && cmd[1] == '-' && toupper(cmd[2]) == 'R') {
+            // --- COMANDO M-R (Memory-Read) ---
+            // Sintassi binaria del C64: "M-R" + (Indirizzo Lo) + (Indirizzo Hi) + (Numero Byte)
+            // Attenzione: i parametri dopo "M-R" non sono stringhe di testo, sono caratteri binari grezzi!
+            if (cmd.length() < 6) {
+                drive15.set_status(34, "SYNTAX ERROR", 0, 0);
+                break;
+            }
+
+            uint8_t addr_lo = (uint8_t)cmd[3];
+            uint8_t addr_hi = (uint8_t)cmd[4];
+            uint8_t num_bytes = (uint8_t)cmd[5];
+
+            uint16_t target_address = addr_lo | (addr_hi << 8);
+
+            // Prepariamo la risposta simulando la memoria interna del 1541
+            // Puliamo il buffer del canale dei comandi (Canale 15) in modo che la successiva
+            // lettura della CPU del C64 trovi i byte che ha richiesto!
+            // Nota: Assicurati di esporre o usare la struttura del buffer di risposta del canale 15
+            drive15.error_buffer = ""; // Svuota la stringa di status standard ("00, OK...")
+
+            for (int b = 0; b < num_bytes; b++) {
+                uint16_t current_addr = target_address + b;
+                uint8_t byte_to_send = 0x00;
+
+                // --- SIMULAZIONE DELLA ROM DELLO STORICO 1541 ---
+                if (current_addr == 0xE5CA) byte_to_send = 0x4C; // JMP Opcode
+                else if (current_addr == 0xE5CB) byte_to_send = 0xF9; // Dest Lo
+                else if (current_addr == 0xE5CC) byte_to_send = 0xE5; // Dest Hi
+                else if (current_addr == 0xE5CD) byte_to_send = 0xAE; // Byte successivo standard ROM (o 0xAA)
+                else {
+                    // Valore di fallback generico se il gioco ispeziona altre aree della ROM standard
+                    byte_to_send = 0x00;
+                }
+
+                // Inseriamo il byte direttamente nel canale di risposta che la CPU leggerà
+                // ad esempio appendendolo a un vettore o alla stringa di I/O del canale 15
+                drive15.error_buffer += (char)byte_to_send;
+            }
+
+            // Segnaliamo all'emulatore che la posizione del buffer di lettura parte da zero
+            drive15.buffer_position = 0;
+        } else {
+            drive15.set_status(31, "SYNTAX ERROR", 0, 0);
+        }
+        break;
+    }
+
     default:
         // Comando DOS sconosciuto o non supportato dall'emulatore
-        cout << "Comando Sconosciuto" << endl;
+        cout << "Comando Sconosciuto: '" << cmd << "'" << endl;
+        for(uint i=0; i<cmd.size(); i++) printf("$%02x ",(uint8_t) cmd[i]);
+        cout << endl;
         drive15.set_status(31, "SYNTAX ERROR", 0, 0);
         break;
     }
@@ -675,6 +806,32 @@ void Drive::handle_trap_chrin_getin() {
 void Drive::handle_trap_chkout() {
     uint8_t lfn = cpu->GetX(); // Il BASIC passa l'LFN nel registro X
 
+    // 1. Controlliamo prima se l'LFN richiesto è associato al Device 4 nelle tabelle del Kernal
+    if(emulate_printer){
+        uint8_t num_files = cpu->MemoryRead(0x0098);
+        for (int i = 0; i < num_files; i++) {
+            if (cpu->MemoryRead(0x0259 + i) == lfn && cpu->MemoryRead(0x0262 + i) == 4) {
+                // È una chiamata di output per la stampante virtuale!
+                cpu->MemoryWrite(0x009A, 4);    // Current Output Device = 4
+                cpu->MemoryWrite(0x00BA, 4);    // Last Used Device = 4
+                cpu->MemoryWrite(0x0090, 0x00); // Pulisce lo status
+
+                // RTS manuale di successo
+                uint8_t sp = cpu->GetS();
+                uint8_t ret_lo = cpu->MemoryRead(0x0100 + (uint8_t)(sp + 1));
+                uint8_t ret_hi = cpu->MemoryRead(0x0100 + (uint8_t)(sp + 2));
+                cpu->SetS(sp + 2);
+                uint16_t target_pc = (ret_lo | (ret_hi << 8)) + 1;
+
+                cpu->SetX(lfn);
+                cpu->SetA(4);
+                cpu->SetP(cpu->GetP() & ~0x01); // Successo
+                cpu->SetPC(target_pc);
+                return;
+            }
+        }
+    }
+
     for (int i = 0; i < 10; i++) {
         if (open_channels[i].is_open && open_channels[i].lfn == lfn && open_channels[i].mode_write) {
             active_output_channel_idx = i;
@@ -694,6 +851,31 @@ void Drive::handle_trap_chkout() {
 }
 
 void Drive::handle_trap_chrout() {
+    uint8_t current_output_device = cpu->MemoryRead(0x009A);
+
+    // =========================================================================
+    // CASO NUOVO: RICEZIONE CARATTERI STAMPANTE (DEVICE 4)
+    // =========================================================================
+    if (current_output_device == 4 && emulate_printer) {
+        uint8_t char_to_print = cpu->GetA();
+
+        // OPZIONALE: Vediamo cosa stampa sul terminale Linux dell'emulatore!
+        // cout << (char_to_print == 0x0D ? '\n' : (char)char_to_print);
+
+        cpu->MemoryWrite(0x0090, 0x00); // Pulisce lo status
+
+        // RTS manuale di successo
+        uint8_t sp = cpu->GetS();
+        uint8_t ret_lo = cpu->MemoryRead(0x0100 + (uint8_t)(sp + 1));
+        uint8_t ret_hi = cpu->MemoryRead(0x0100 + (uint8_t)(sp + 2));
+        cpu->SetS(sp + 2);
+        uint16_t target_pc = (ret_lo | (ret_hi << 8)) + 1;
+
+        cpu->SetP(cpu->GetP() & ~0x01); // Successo
+        cpu->SetPC(target_pc);
+        return;
+    }
+
     // Se la Zero Page $9A non è stata impostata a 8 da CHKOUT, lascia andare lo schermo nativo
     if (cpu->MemoryRead(0x009A) != 8) {
         return;

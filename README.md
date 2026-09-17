@@ -1,2 +1,20 @@
 # L64
 L64 - Yet Another C64 Emulator for Linux
+
+# WARNING
+L64 is in its initial state and is not to be considered a finished product.
+
+The following features have been implemented:
+- CPU emulation
+- VIC emulation, with all graphics modes
+- HLEDrive emulation, which is not yet perfect or complete
+- SID emulation
+- keyboard emulation
+
+# COMPILATION AND RUN
+Go into L64 directory and type:  
+qmake
+
+make
+
+./L64

@@ -16,7 +16,7 @@ Following packages are required:
 
 sdl2-compat (libSDL2)
 
-quazip-qt6 (for manage zip archives, version used: QuaZip-Qt6-1.7.2)
+quazip-qt6 (for management of zip archives, version used: QuaZip-Qt6-1.7.2)
 
 # COMPILATION AND RUN
 Go into L64 directory and type:  

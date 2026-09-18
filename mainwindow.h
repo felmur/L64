@@ -46,6 +46,8 @@ public slots:
     void getdirectory();
     void joystick();
     void printer();
+    void loadondirectory();
+    void loadfirstfile();
 
     void onFocusChanged();
     void timeout();

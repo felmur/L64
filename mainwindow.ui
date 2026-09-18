@@ -232,6 +232,8 @@
     </property>
     <addaction name="actionAttach"/>
     <addaction name="actionGet_Directory"/>
+    <addaction name="actionLoad_First_File"/>
+    <addaction name="actionLoad_on_directory"/>
    </widget>
    <widget class="QMenu" name="menuPrograms">
     <property name="title">
@@ -254,6 +256,9 @@
    </property>
   </action>
   <action name="actionReset">
+   <property name="icon">
+    <iconset theme="QIcon::ThemeIcon::SystemReboot"/>
+   </property>
    <property name="text">
     <string>Reset</string>
    </property>
@@ -264,6 +269,9 @@
    </property>
   </action>
   <action name="actionLoad_Run_C64_PRG">
+   <property name="icon">
+    <iconset theme="QIcon::ThemeIcon::MultimediaPlayer"/>
+   </property>
    <property name="text">
     <string>Load&amp;Run C64 PRG</string>
    </property>
@@ -274,6 +282,9 @@
    </property>
   </action>
   <action name="actionGet_Directory">
+   <property name="icon">
+    <iconset theme="QIcon::ThemeIcon::FolderVisiting"/>
+   </property>
    <property name="text">
     <string>Get Directory</string>
    </property>
@@ -304,6 +315,28 @@
    </property>
    <property name="text">
     <string>Printer</string>
+   </property>
+  </action>
+  <action name="actionLoad_on_directory">
+   <property name="icon">
+    <iconset theme="QIcon::ThemeIcon::DocumentSend"/>
+   </property>
+   <property name="text">
+    <string>Load on directory</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Shift+L</string>
+   </property>
+  </action>
+  <action name="actionLoad_First_File">
+   <property name="icon">
+    <iconset theme="QIcon::ThemeIcon::MediaPlaybackStart"/>
+   </property>
+   <property name="text">
+    <string>Load First File</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Shift+F</string>
    </property>
   </action>
  </widget>
@@ -629,6 +662,38 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>actionLoad_on_directory</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>loadondirectory()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>569</x>
+     <y>399</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actionLoad_First_File</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>loadfirstfile()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>569</x>
+     <y>399</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>testclick()</slot>
@@ -652,5 +717,7 @@
   <slot>getdirectory()</slot>
   <slot>joystick()</slot>
   <slot>printer()</slot>
+  <slot>loadondirectory()</slot>
+  <slot>loadfirstfile()</slot>
  </slots>
 </ui>

@@ -1,8 +1,10 @@
-QT += widgets
+QT += widgets core5compat
 
 CONFIG += c++17
 
-LIBS += -lSDL2
+LIBS += -lSDL2 -lquazip1-qt6
+
+INCLUDEPATH += /usr/include/QuaZip-Qt6-1.7.2/quazip
 
 # You can make your code fail to compile if it uses deprecated APIs.
 # In order to do so, uncomment the following line.
@@ -53,3 +55,4 @@ CONFIG(release, debug|release) {
     # QMAKE_CFLAGS_RELEASE   = -pipe -O1 -Wall -Wextra -D_REENTRANT -fPIC
     # QMAKE_LFLAGS_RELEASE   = -Wl,-O1 -pipe -O1 -std=gnu++1z -fPIC
 }
+

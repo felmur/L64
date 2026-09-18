@@ -62,6 +62,8 @@ public:
     size_t GetSectorOffset(int track, int sector);
     uint8_t* GetRawDataPtr() { return data.data(); }
 
+    void unzip(const QString &zipPath, const QString &extractPath);
+
 private:
     vector<uint8_t> data;
     bool loaded = false;

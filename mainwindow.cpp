@@ -16,6 +16,7 @@ using namespace std;
 #include <QFile>
 #include <QDir>
 #include <QFileDialog>
+#include <QThread>
 
 #include "timebase.h"
 timebase *tb=nullptr;
@@ -306,7 +307,8 @@ void MainWindow::exit()
 
 void MainWindow::attach()
 {
-    QFileDialog *fd = new QFileDialog(this,"Select your .D64 image file...","/mnt/nv1/c64/floppy/mio","d64");
+    QFileDialog *fd = new QFileDialog(this,"Select your .D64 image file...","/mnt/nv1/c64/floppy/mio","");
+    fd->setNameFilter("DiskImage (*.d64 *.zip)");
     if (fd->exec()){
         QStringList res = fd->selectedFiles();
         lastdisk = res[0];
@@ -392,6 +394,65 @@ void MainWindow::joystick()
 void MainWindow::printer()
 {
     emulate_printer = ui->actionPrinter->isChecked();
+}
+
+void MainWindow::loadondirectory()
+{
+    memory[0x0277] = 'L';
+    memory[0x0278] = 'O';
+    memory[0x0279] = 'A';
+    memory[0x027A] = 'D';
+    memory[0x027B] = ' ';
+    memory[0x027C] = 0x1d;
+    memory[0x027D] = 0x1d;
+    memory[0x027E] = 0x1d;
+    memory[0x027F] = 0x1d;
+    memory[0x0280] = 0x1d;
+    memory[0x00C6] = 10;
+    QThread::msleep(50);
+    memory[0x0277] = 0x1d;
+    memory[0x0278] = 0x1d;
+    memory[0x0279] = 0x1d;
+    memory[0x027A] = 0x1d;
+    memory[0x027B] = 0x1d;
+    memory[0x027C] = 0x1d;
+    memory[0x027D] = 0x1d;
+    memory[0x027E] = 0x1d;
+    memory[0x027F] = 0x1d;
+    memory[0x0280] = 0x1d;
+    memory[0x00C6] = 10;
+    QThread::msleep(50);
+    memory[0x0277] = 0x1d;
+    memory[0x0278] = 0x1d;
+    memory[0x0279] = 0x1d;
+    memory[0x027A] = ',';
+    memory[0x027B] = '8';
+    memory[0x027C] = ',';
+    memory[0x027D] = '1';
+    memory[0x027E] = '\r';
+    memory[0x00C6] = 8;
+    QThread::msleep(50);
+    memory[0x0277] = 'R';
+    memory[0x0278] = 'U';
+    memory[0x0279] = 'N';
+    memory[0x027A] = ':';
+    memory[0x027B] = '\r';
+    memory[0x00C6] = 5;
+}
+
+void MainWindow::loadfirstfile()
+{
+    memory[0x0277] = 'L';
+    memory[0x0278] = 79 + 128; // shift + O, abbreviazione per LOAD
+    memory[0x0279] = '"';
+    memory[0x027A] = '*';
+    memory[0x027B] = '"';
+    memory[0x027C] = ',';
+    memory[0x027D] = '8';
+    memory[0x027E] = ',';
+    memory[0x027F] = '1';
+    memory[0x0280] = '\r';
+    memory[0x00C6] = 10;
 }
 
 void MainWindow::onFocusChanged()

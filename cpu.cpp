@@ -6,6 +6,9 @@
 
 #include "cpu.h"
 #include "common.h"
+
+#define TRACE 0         // set 1 to debug
+
 #include <iostream>
 #include <stdio.h>
 using namespace std;
@@ -1844,14 +1847,20 @@ uint8_t CPU::unlocktick()
 
 void CPU::Exec(Instr i)
 {
+    uint16_t val=0, addr=0;
     char s[10];
     crossed = false;
     branched = false;
+
+    addr = pc -1;
     uint16_t src = (this->*i.addr)();
+    val = src;
+    if (!strcmp(i.saddr,"IMM")) val=MemoryRead(src);
 
     if (TRACE){
-        sprintf(s,"$%04x",src);
-        printf("$%04x %s %s %s\n",pc-1,i.scode,i.saddr,(!strcmp(i.saddr,"IMP") || !strcmp(i.saddr,"ACC") ? "" : s));
+        if (val >256) sprintf(s,"$%04x",val);
+        else sprintf(s,"$%02x",val);
+        printf("$%04x %s %s %s\n",addr,i.scode,i.saddr,(!strcmp(i.saddr,"IMP") || !strcmp(i.saddr,"ACC") ? "" : s));
     }
 
     (this->*i.code)(src);

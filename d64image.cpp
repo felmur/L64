@@ -10,6 +10,11 @@
 #include <cstring>
 #include <iostream>
 #include <QFile>
+#include <QDir>
+#include <QDirIterator>
+
+#include <quazip.h>
+#include <quazipfile.h>
 
 using namespace std;
 extern DriveStatusChannel drive15;
@@ -27,6 +32,28 @@ size_t D64Image::GetSectorOffset(int track, int sector) {
     return sector_index * 256;
 }
 
+void D64Image::unzip(const QString &zipPath, const QString &extractPath) {
+    QuaZip zip(zipPath);
+    if (!zip.open(QuaZip::mdUnzip)) return;
+
+    QuaZipFile file(&zip);
+    for (bool more = zip.goToFirstFile(); more; more = zip.goToNextFile()) {
+        QuaZipFileInfo info;
+        zip.getCurrentFileInfo(&info);
+
+        QString fileName = extractPath + "/" + info.name;
+        file.open(QIODevice::ReadOnly);
+
+        QFile outFile(fileName);
+        if (outFile.open(QIODevice::WriteOnly)){
+            outFile.write(file.readAll());
+            outFile.close();
+        }
+        file.close();
+    }
+    zip.close();
+}
+
 string D64Image::CleanC64Name(const uint8_t* raw_name, int max_len) {
     string res = "";
     for (int i = 0; i < max_len; i++) {
@@ -37,7 +64,30 @@ string D64Image::CleanC64Name(const uint8_t* raw_name, int max_len) {
 }
 
 bool D64Image::LoadImage(const string& filepath) {
-    ifstream file(filepath, ios::binary | ios::ate);
+    string _filepath = filepath;
+
+    if (filepath.substr(filepath.size()-4,4) == ".zip" || filepath.substr(filepath.size()-4,4) == ".ZIP") {
+        QString dir = "/tmp/L64";
+        QDir d(dir);
+        d.removeRecursively();
+        d.mkdir(dir);
+        if (!d.exists()){
+            drive15.set_status(74, "DRIVE NOT READY", 0, 0);
+            loaded = false;
+            return false;
+        }
+        unzip(filepath.data(),dir);
+        QDirIterator it(dir, QDir::Files, QDirIterator::Subdirectories);
+        while (it.hasNext()) {
+            it.next();
+            if (it.filePath().endsWith(".d64") || it.filePath().endsWith(".D64")){
+                _filepath = it.filePath().toStdString();
+                break;
+            }
+        }
+    }
+
+    ifstream file(_filepath, ios::binary | ios::ate);
     if (!file.is_open()) {
         drive15.set_status(74, "DRIVE NOT READY", 0, 0);
         loaded = false;

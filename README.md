@@ -15,6 +15,7 @@ The following features have been implemented:
 Following packages are required:  
 
 sdl2-compat (libSDL2)
+
 quazip-qt6 (for manage zip archives, version used: QuaZip-Qt6-1.7.2)
 
 # COMPILATION AND RUN
